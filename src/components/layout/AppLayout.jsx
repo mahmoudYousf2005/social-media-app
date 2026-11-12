@@ -1,14 +1,16 @@
 import { Outlet } from "react-router-dom"
 import Sidebar from "./Sidebar"
+import BottomNav from "./BottomNav"
 const AppLayout = () => {
   return (
     <div className="min-h-screen  lg:grid lg:grid-cols-[250px_minmax(0,1fr)]">
       <Sidebar />
-      <main className="min-w-0 lg:border-l">
+      <main className="min-w-0 lg:border-l lg:pb-0 pb-24">
         <div className="mx-auto max-w-2xl">
           <Outlet />
         </div>
       </main>
+      <BottomNav />
     </div>
   )
 }
