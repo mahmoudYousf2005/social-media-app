@@ -3,12 +3,15 @@ import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
 import FormField from "@/components/auth/FormField"
 import { useForm } from "react-hook-form"
+import { signupSchema } from "@/schemas/auth"
+import { zodResolver } from "@hookform/resolvers/zod";
 const SignUp = () => {
 
   const {
     register,
-    handleSubmit
-  } = useForm()
+    handleSubmit,
+    formState: { errors, isSubmitting }
+  } = useForm({resolver: zodResolver(signupSchema)})
   const onSubmit = (data) => {
     console.log(data)
   }
@@ -24,14 +27,14 @@ const SignUp = () => {
         {/* Name */}
         <div className="grid gap-4 sm:grid-cols-2">
           
-          <FormField id="name" label="Name" type="text" placeholder="name" register={register("name")}/>
-          <FormField id="username" label="UserName" type="text" placeholder="username" register={register("username")}/>
+          <FormField id="name" label="Name"  placeholder="name" register={register("name")} error={errors.name} autoComplete="name"/>
+          <FormField id="username" label="UserName" placeholder="username" register={register("username")} autoComplete="username" error={errors.username}/>
           
         </div>
         {/* Email */}
-        <FormField id="email" label="Email" type="email" placeholder="you@example.com" register={register("email")}/>
+        <FormField id="email" label="Email" type="email" placeholder="you@example.com" register={register("email")} autoComplete="email" error={errors.email}/>
         {/* Date */}
-        <FormField id="dateOfBirth" label="Date of birth" type="date" register={register("dateOfBirth")}/>
+        <FormField id="dateOfBirth" label="Date of birth" type="date" register={register("dateOfBirth")} autoComplete="bday" error={errors.dateOfBirth}/>
 
         {/* Gender */}
         <fieldset>
@@ -46,15 +49,22 @@ const SignUp = () => {
                 <input type="radio" {...register("gender")} value={g} className="accent-[#b3245f]"  />
                 {g}
               </label>
+              
             ))}
+            {errors.gender && (
+              <p role="alert" className="text-sm text-destructive">{errors.gender.message}</p>
+            )}
           </div>
         </fieldset>
         {/* password */}
-        <FormField id="password" label="Password" type="password" placeholder="At least 8 Characterc" register={register("password")}/>
+        <FormField id="password" label="Password" type="password" placeholder="At least 8 Characterc" register={register("password")}
+        autoComplete="new-password" error={errors.password}/>
         {/* Confirm Password */}
-        <FormField id="rePassword" label="Confirm password" type="password" placeholder="Repeat your password" register = {register("rePassword")}/>
+        <FormField id="rePassword" label="Confirm password" type="password" placeholder="Repeat your password" register = {register("rePassword")}
+        autoComplete="new-password" error={errors.rePassword}/>
         
         <Button
+        disabled={isSubmitting}
         type="submit"
         className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
           Create account</Button>
