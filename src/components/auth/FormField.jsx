@@ -8,7 +8,7 @@ const FormField = ({id , label ,  register , error , ...props}) => {
         id={id} 
         aria-invalid={!!error}
         aria-describedby={error ?-`${id}-error` : undefined}
-        className="h-11 rounded-xl"
+        className="h-12 rounded-xl"
         {...register}   
         {...props}   
         />

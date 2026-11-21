@@ -68,7 +68,9 @@ const SignUp = () => {
         type="submit"
         className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
           Create account</Button>
-        <p className="text-muted-foreground">Already have an account? <Link to="/signin" className="font-bold text-[#b3245f]">Sign in</Link></p>
+        <div className="text-muted-foreground text-center">
+          <p className="">Already have an account? <Link to="/signin" className="font-bold text-[#b3245f]">Sign in</Link></p>
+        </div>
       </form>
 
     </div>
