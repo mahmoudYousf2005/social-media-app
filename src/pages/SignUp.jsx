@@ -1,19 +1,29 @@
-import { Link } from "react-router-dom"
+import { Link , useNavigate} from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import FormField from "@/components/auth/FormField"
 import { useForm } from "react-hook-form"
 import { signupSchema } from "@/schemas/auth"
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthLayout from "@/components/layout/AuthLayout"
+import { useMutation } from "@tanstack/react-query";
+import { getErrorMessage } from "@/api/client"
+import { signup } from "@/api/auth"
 const SignUp = () => {
+
+  const navigate = useNavigate()
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    formState: { errors }
   } = useForm({resolver: zodResolver(signupSchema)})
+
+  const {mutate , isPending , isError , error} = useMutation({
+    mutationFn: signup,
+    onSuccess: ()=> navigate("/signin")
+  })
   const onSubmit = (data) => {
-    console.log(data)
+    mutate(data)
   }
   return (
     <AuthLayout
@@ -69,11 +79,16 @@ const SignUp = () => {
         <FormField id="rePassword" label="Confirm password" type="password" placeholder="Repeat your password" register = {register("rePassword")}
         autoComplete="new-password" error={errors.rePassword}/>
         
+        {isError && (
+          <p role="alert" className="text-sm text-destructive">{getErrorMessage(error)}</p>
+        )}
+
         <Button
-        disabled={isSubmitting}
+        disabled={isPending}
         type="submit"
         className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
-          Create account</Button>
+          {isPending ? "Creating account..." : "Create account"}
+        </Button>
         
       </form>
 
