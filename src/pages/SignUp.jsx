@@ -1,10 +1,10 @@
-
-import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button"
 import FormField from "@/components/auth/FormField"
 import { useForm } from "react-hook-form"
 import { signupSchema } from "@/schemas/auth"
 import { zodResolver } from "@hookform/resolvers/zod";
+import AuthLayout from "@/components/layout/AuthLayout"
 const SignUp = () => {
 
   const {
@@ -16,12 +16,18 @@ const SignUp = () => {
     console.log(data)
   }
   return (
-    <div className="p-5 min-h-screen max-w-md mx-auto">
-      <Link to="/signin"
-      className="bg-linear-to-br from-[#e0357f] to-[#7a4dfd] bg-clip-text text-3xl font-bold tracking-tight text-transparent"
-      >vibrant</Link>
-      <h1 className="text-3xl font-bold mt-4">Create your account</h1>
-      <p className="text-muted-foreground">Join vibrant and start Sharing</p>
+    <AuthLayout
+      title="Create your account"
+      subTitle="Join Vibrant and start sharing."
+      footer={
+         <>
+          Already have an account?{" "}
+          <Link to="/signin" className="font-bold text-[#b3245f] dark:text-[#ff5fa2]">
+            Sign in
+          </Link>
+        </>
+      }
+    >
 
       <form onSubmit={handleSubmit(onSubmit)} className="py-5 space-y-5">
         {/* Name */}
@@ -68,12 +74,10 @@ const SignUp = () => {
         type="submit"
         className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
           Create account</Button>
-        <div className="text-muted-foreground text-center">
-          <p className="">Already have an account? <Link to="/signin" className="font-bold text-[#b3245f]">Sign in</Link></p>
-        </div>
+        
       </form>
 
-    </div>
+    </AuthLayout>
   )
 }
 
