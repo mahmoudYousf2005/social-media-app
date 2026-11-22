@@ -9,23 +9,30 @@ import Notifications from './pages/Notifications'
 import People from './pages/People'
 import Settings from './pages/Settings'
 import AppLayout from './components/layout/AppLayout'
+import GuestRoute from './routes/GuestRoute'
+import ProtectedRoute from './routes/ProtectedRoute'
 function App() {
 
   return (
     <>
       <Routes>
-        <Route path='/signIn' element={<SignIn />}/>
-        <Route path='/signup' element={<SignUp />}/>
-
-        <Route element={<AppLayout />}>
-
-          <Route path='/' element={<Home/>}/>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/people" element={<People />} />
-
+        <Route element={<GuestRoute />}>
+          <Route path='/signIn' element={<SignIn />}/>
+          <Route path='/signup' element={<SignUp />}/>
         </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+
+            <Route path='/' element={<Home/>}/>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/people" element={<People />} />
+
+          </Route>
+        </Route>
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
       
