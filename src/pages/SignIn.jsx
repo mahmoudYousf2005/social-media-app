@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link , useNavigate} from "react-router-dom"
 import FormField from "@/components/auth/FormField"
 import { Button } from "@/components/ui/button"
 import { useForm } from "react-hook-form";
@@ -8,17 +8,24 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import { useMutation } from "@tanstack/react-query";
 import { getErrorMessage } from "@/api/client";
 import { signin } from "@/api/auth";
+import { useAuthStore } from "@/store/authStore";
 const SignIn = () => {
   
+  const login = useAuthStore((s)=> s.login)
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
-    formState:{errors }
+    formState:{errors}
   } = useForm({resolver: zodResolver(signInSchema)})
 
   const {mutate , isPending , isError , error} = useMutation({
     mutationFn: signin,
-    onSuccess: (res) => console.log(res)
+    onSuccess: (res)=> {
+      const {token , user} = res.data
+      login(token , user)
+      navigate("/" ,{ replace: true})
+    }
   })
 
   const onSubmit = (data)=>{
@@ -31,7 +38,7 @@ const SignIn = () => {
     footer={<p className="">New here? <Link to="/signup" className="font-bold text-[#b3245f]">Sign up</Link></p>}
     >
     
-      <form onSubmit={handleSubmit(onSubmit)} className="py-5 space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate  className="py-5 space-y-5">
          {/* Email */}
         <FormField id="email" label="Email" type="email" placeholder="you@example.com" autoComplete="email" 
         register={register("email")} error={errors.email}/>
@@ -47,7 +54,7 @@ const SignIn = () => {
         disabled={isPending}
           type="submit"
           className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
-          Sign in
+          {isPending ? "Signing in..." : "Sign in"}
         </Button>
       </form>
     </AuthLayout>
