@@ -5,15 +5,24 @@ import { useForm } from "react-hook-form";
 import { signInSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import AuthLayout from "@/components/layout/AuthLayout";
+import { useMutation } from "@tanstack/react-query";
+import { getErrorMessage } from "@/api/client";
+import { signin } from "@/api/auth";
 const SignIn = () => {
   
   const {
     register,
     handleSubmit,
-    formState:{errors , isSubmitting}
+    formState:{errors }
   } = useForm({resolver: zodResolver(signInSchema)})
+
+  const {mutate , isPending , isError , error} = useMutation({
+    mutationFn: signin,
+    onSuccess: (res) => console.log(res)
+  })
+
   const onSubmit = (data)=>{
-    console.log(data)
+    mutate(data)
   }
   return (
     <AuthLayout 
@@ -30,8 +39,12 @@ const SignIn = () => {
         <FormField id="password" label="Password" type="password" placeholder="Enter your password" autoComplete="current-password" 
         register={register("password")} error={errors.password}/>
 
+        {isError && (
+          <p role="alert" className="text-sm text-destructive">{getErrorMessage(error)}</p>
+        )}
+
         <Button
-        disabled={isSubmitting}
+        disabled={isPending}
           type="submit"
           className="w-full h-12 rounded-xl bg-linear-to-br from-[#e0357f] to-[#7a4dfd] font-bold text-lg cursor-pointer">
           Sign in
